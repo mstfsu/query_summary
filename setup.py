@@ -11,6 +11,7 @@ setup(
     install_requires=[
         "pymongo>=4.0",
         "flask>=2.0",
+        "mongoengine>=0.24.0",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
