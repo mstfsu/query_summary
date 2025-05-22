@@ -1,11 +1,12 @@
 from flask import request, g, Blueprint, render_template
-from pymongo.monitoring import monitoring
-from counter import QueryCounter
+from pymongo import MongoClient, monitoring
+from .counter import QueryCounter
+from bson import json_util
 
 class QuerySummaryMiddleware:
     """Middleware to integrate query summary into Flask."""
 
-    def __init__(self, app=None, mongo_client=None):
+    def __init__(self, app=None):
         self.query_counter = QueryCounter()
         monitoring.register(self.query_counter)
         self.blueprint = Blueprint(
@@ -40,5 +41,16 @@ class QuerySummaryMiddleware:
 
     def query_summary_view(self):
         """View to display the last ten requests."""
-        last_ten_requests = self.query_counter.get_last_ten_requests()
+        last_ten_requests = [
+            {
+                "url": request["url"],
+                "method": request["method"],
+                "query_summary": {
+                    "total_queries": request["query_summary"]["total_queries"],
+                    "repeated_query_count": request["query_summary"]["repeated_query_count"],
+                    "commands": [json_util.dumps(cmd) for cmd in request["query_summary"]["commands"]],
+                },
+            }
+            for request in self.query_counter.get_last_ten_requests()
+        ]
         return render_template("query_summary.html", last_ten_requests=last_ten_requests)

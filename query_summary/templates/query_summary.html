@@ -1,52 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Query Summary</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Query Summary</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f8f9fb;
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(to right, #6366f1, #3b82f6);
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 600;
+    }
+
+    header h2 {
+      margin-top: 0.5rem;
+      font-weight: 400;
+      font-size: 1.2rem;
+    }
+
+    main {
+      padding: 2rem 1rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+      background-color: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    thead {
+      background-color: #e0e7ff;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+      font-size: 0.95rem;
+    }
+
+    th {
+      font-weight: 600;
+      color: #374151;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover {
+      background-color: #f1f5f9;
+    }
+
+    .command {
+      font-family: 'Courier New', monospace;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 0.75rem;
+      max-height: 150px;
+      overflow: auto;
+    }
+
+    footer {
+      background: #6366f1;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 3rem;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        background-color: white;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        padding: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      }
+
+      td {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border: none;
+        border-bottom: 1px solid #eee;
+      }
+
+      td:last-child {
+        border-bottom: none;
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #4b5563;
+        flex-basis: 40%;
+      }
+    }
+  </style>
 </head>
 <body>
+  <header>
     <h1>Query Summary</h1>
     <h2>Last 10 Requests</h2>
+  </header>
+  <main>
     <table>
+      <thead>
         <tr>
-            <th>URL</th>
-            <th>Method</th>
-            <th>Total Queries</th>
-            <th>Repeated Queries</th>
+          <th>URL</th>
+          <th>Method</th>
+          <th>Total Queries</th>
+          <th>Repeated Queries</th>
+          <th>Commands</th>
         </tr>
+      </thead>
+      <tbody>
         {% for request in last_ten_requests %}
         <tr>
-            <td>{{ request.url }}</td>
-            <td>{{ request.method }}</td>
-            <td>{{ request.query_summary.total_queries }}</td>
-            <td>{{ request.query_summary.repeated_query_count }}</td>
+          <td data-label="URL">{{ request.url }}</td>
+          <td data-label="Method">{{ request.method }}</td>
+          <td data-label="Total Queries">{{ request.query_summary.total_queries }}</td>
+          <td data-label="Repeated Queries">{{ request.query_summary.repeated_query_count }}</td>
+          <td data-label="Commands">
+            <div class="command">
+              {% for command in request.query_summary.commands %}
+                {{ command }}
+              {% endfor %}
+            </div>
+          </td>
         </tr>
         {% endfor %}
+      </tbody>
     </table>
+  </main>
+  <footer>
+    &copy; 2025 Query Summary App
+  </footer>
 </body>
 </html>
