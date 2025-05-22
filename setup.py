@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="query_summary",  # Package name
-    version="0.1.0",  # Initial version
+    version="0.1.1",  # Initial version
     description="A Flask middleware to track MongoDB queries and provide query statistics.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
