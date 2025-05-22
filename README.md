@@ -35,3 +35,5 @@ me.connect(alias="example_database", host=client)
 ```
 
 - The `QuerySummaryMiddleware` automatically tracks MongoDB commands executed by the `MongoClient` instance it is registered with.
+- go to /query_summary to see statistics
+<img width="1280" alt="Screenshot 2025-05-22 at 15 32 54" src="https://github.com/user-attachments/assets/17547730-c330-478c-a1a6-b5d3601dd917" />
